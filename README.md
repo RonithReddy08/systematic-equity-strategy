@@ -46,11 +46,8 @@ confirming the evaluation methodology doesn't manufacture false positives.
 8. [Project layout](#project-layout)
 9. [Setup & run](#setup--run)
 10. [Results](#results)
-11. [How to read these results](#how-to-read-these-results)
-12. [Mapping to the Quantitative Trader – EQR role](#mapping-to-the-quantitative-trader--eqr-role)
-13. [Configuration reference](#configuration-reference)
-14. [Design choices that keep it honest](#design-choices-that-keep-it-honest)
-15. [Limitations & next steps](#limitations--next-steps)
+11. [Configuration reference](#configuration-reference)
+12. [Limitations & next steps](#limitations--next-steps)
 
 ---
 
