@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "systematic-equity-strategy"
+version = "0.1.0"
+description = "Systematic multi-signal equity strategy with risk-adjusted, cost-aware, walk-forward backtesting"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=2.1",
+    "scipy>=1.14",
+    "matplotlib>=3.9",
+    "yfinance>=0.2.40",
+    "pyarrow>=17.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
