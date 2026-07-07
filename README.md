@@ -245,42 +245,6 @@ Written to `figures/` on every backtest run:
 
 ---
 
-## How to read these results
-
-This is the important part, and it's deliberately **not** a glossy backtest.
-
-- **The strategy underperforms SPY over 2010–2024** (combined Sharpe ≈ 0.12 vs
-  SPY 0.84; excess-return t-tests are significantly *negative*). That is the
-  framework working correctly: a vol-targeted long/short book of *naive* EMA and
-  z-score signals, charged realistic costs, **should not** beat a historic bull
-  market — and the framework says so plainly instead of hiding it behind
-  cherry-picked parameters.
-- **The negative control passes** (p = 0.164 on pure noise), so the evaluation
-  machinery is calibrated — it doesn't invent edge that isn't there.
-- **Walk-forward ≈ full-sample**, so what little performance exists is *stable*,
-  not an artifact of fitting parameters to the whole history.
-- **Where the money leaks is visible**: the per-ticker table shows mean-reversion
-  on AAPL (−0.13 CAGR) and trend on CAT (−0.08) as the main drags — exactly the
-  kind of "where is the portfolio leaving money on the table?" diagnostic the
-  framework is built to surface.
-
-The value of the project is the **honest, reusable research process** — costs,
-risk, and significance first — not this particular parameter set's P&L.
-
----
-
-## Mapping to the Quantitative Trader – EQR role
-
-| JD requirement | How the project addresses it |
-|---|---|
-| *Decide how capital is allocated and risk is deployed across signals* | Inverse-volatility weighting across the trend and mean-reversion signals, plus volatility targeting on the combined book (`portfolio.py`) |
-| *Improve the optimizer; model and minimize trading costs and market impact* | Explicit transaction cost model with a market-impact term tied to participation rate (trade size / average dollar volume) (`costs.py`) |
-| *Own portfolio-level risk; push risk-adjusted returns higher* | Sharpe, Sortino, Calmar reported at both individual-signal and combined-portfolio level, so allocation decisions are grounded in risk-adjusted performance (`metrics.py`) |
-| *Find where the portfolio is leaving money on the table* | Per-signal and per-ticker breakdowns expose which signals/costs drag on the combined book (`run_backtest.py`, table 2 above) |
-| *Quantitative rigor; reason about profitability from first principles* | Walk-forward validation and significance testing (t-tests, p-values, information ratio) to distinguish genuine edge from overfitting or noise (`backtest.walk_forward`, `metrics.py`) |
-
----
-
 ## Configuration reference
 
 All knobs live in [`config.py`](config.py) as dataclasses with documented defaults:
@@ -294,16 +258,6 @@ All knobs live in [`config.py`](config.py) as dataclasses with documented defaul
 | Risk | `iv_window=60`, `vt_window=60`, `vol_target=0.10`, `leverage_cap=2.0` |
 | Walk-forward | `is_days=504`, `oos_days=126`, plus small param grids searched per fold |
 
-## Design choices that keep it honest
-
-- **No lookahead:** signal positions are shifted one bar in a single place
-  (`backtest.run_signal`); inverse-vol weights and the vol-target scale are
-  computed on trailing windows and shifted. Unit-tested.
-- **Costs before edge:** returns are always net of the market-impact cost model.
-- **Out-of-sample by construction:** the walk-forward track record is stitched
-  from OOS windows only; parameters are never fit on the data they are scored on.
-- **Calibration check:** the metrics suite is validated against pure noise (both a
-  false-positive-rate test and the synthetic run) so significance isn't fabricated.
 
 ## Limitations & next steps
 
